@@ -60,7 +60,7 @@ double azg = 0;
 double gxds = 0;
 double gyds = 0;
 double gzds = 0;
-
+double temp = 0;
 
 
 /* Main program loop */
@@ -71,7 +71,7 @@ int main(void)
 	usart_init();
 
     xTaskCreate(
-    	Led
+    	LecturaMPU6050
 		,  (const portCHAR *)"MPU6050" // Main Arduino Mega 2560, Freetronics EtherMega (Red) LED Blink
 		,  256				// Tested 9 free @ 208
 		,  NULL
@@ -105,16 +105,15 @@ static void Led(void *pvParameters){
 
 		    while(1)
 		    {
-		    	PORTB |=  _BV(PORTB5);       // main (red PB5) LED on. Arduino LED on
+		    	PORTB |=  _BV(PORTB7);       // main (red PB5) LED on. Arduino LED on
 
 				vTaskDelayUntil( &xLastWakeTime, ( 1000 / portTICK_PERIOD_MS ) );
 
-				PORTB &= ~_BV(PORTB5);       // main (red PB5) LED off. Arduino LED off
+				PORTB &= ~_BV(PORTB7);       // main (red PB5) LED off. Arduino LED off
 
-				vTaskDelayUntil( &xLastWakeTime, ( 4000 / portTICK_PERIOD_MS ) );
+				vTaskDelayUntil( &xLastWakeTime, ( 1000 / portTICK_PERIOD_MS ) );
 
 				put_float(2.3);
-				put_string("Hola\n");
 		    }
 
     }
@@ -131,7 +130,8 @@ static void LecturaMPU6050(void *pvParameters) // Main Red LED Flash
 	API function. */
 	xLastWakeTime = xTaskGetTickCount();
 
-	DDRB |= 0xF0;
+	DDRB |= 1<<7;
+	PORTB |= 1<<7;
 
     while(1)
     {
@@ -144,14 +144,21 @@ static void LecturaMPU6050(void *pvParameters) // Main Red LED Flash
 		//_delay_ms(50);
     	mpu6050_getRawData(&ax, &ay, &az, &gx, &gy, &gz);
     	mpu6050_getConvData(&axg, &ayg, &azg, &gxds, &gyds, &gzds);
+    	getTemperature(&temp);
 
     	put_float(axg);
     	put_float(ayg);
     	put_float(azg);
+    	put_float(temp);
     	put_string("\n");
-    	put_float(2.3);
 
-    	if(axg < 0.1) PORTB &= 0x00;
+
+    	if (axg < 0){
+    		PORTB |=  _BV(PORTB7);
+    	}else{
+    		PORTB &= ~_BV(PORTB7);
+    	}
+    	/*if(axg < 0.1) PORTB &= 0x00;
 
     	if(axg >= 0.1 && axg < 0.4){
     		PORTB &= 0x00;
@@ -169,7 +176,7 @@ static void LecturaMPU6050(void *pvParameters) // Main Red LED Flash
     	if(axg >= 0.9){
     		PORTB &= 0x00;
 			PORTB |= 0xF0;
-		}
+		}*/
 
 		vTaskDelayUntil( &xLastWakeTime, ( 10 ) );
 

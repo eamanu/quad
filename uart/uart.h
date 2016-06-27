@@ -42,7 +42,7 @@ For further information contact with me please. julome21@gmail.com
 
 // Functions definitions
 void usart_init(void);			// Initialize USART
-int put_char(int);	// Tx character char
+int put_char(int);				// Tx character char
 void put_string (char*);		// Tx string data
 void put_int(int);				// Tx integer data
 void put_long(long);			// Tx long data

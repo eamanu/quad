@@ -46,7 +46,7 @@ all: quadcopter_dev.elf secondary-outputs
 quadcopter_dev.elf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: AVR C Linker'
-	avr-gcc -Wl,-Map,quadcopter_dev.map -mmcu=atmega16 -o "quadcopter_dev.elf" $(OBJS) $(USER_OBJS) $(LIBS)
+	avr-gcc -Wl,-Map,quadcopter_dev.map -mmcu=atmega2560 -o "quadcopter_dev.elf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -58,7 +58,7 @@ quadcopter_dev.lss: quadcopter_dev.elf
 
 sizedummy: quadcopter_dev.elf
 	@echo 'Invoking: Print Size'
-	-avr-size --format=avr --mcu=atmega16 quadcopter_dev.elf
+	-avr-size --format=avr --mcu=atmega2560 quadcopter_dev.elf
 	@echo 'Finished building: $@'
 	@echo ' '
 
