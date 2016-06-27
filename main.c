@@ -35,9 +35,13 @@
 #include "hd44780.h"
 #endif
 
+// For uart comm
 #include "uart/uart.h"
-
+// for mpu6050
 #include "adcs/mpu6050.h"
+// for sensor reader
+#include "adcs/sensor_reader.h"
+
 /*-----------------------------------------------------------*/
 /* Create a handle for the serial port. */
 //extern xComPortHandle xSerialPort;
@@ -133,52 +137,31 @@ static void LecturaMPU6050(void *pvParameters) // Main Red LED Flash
 	DDRB |= 1<<7;
 	PORTB |= 1<<7;
 
+	//init interrupt
+	sei();
+
+	//init mpu6050
+	mpu6050_init();
+
+	double Roll = 0.0;
+	double Pitch = 0.0;
+
     while(1)
     {
-    	//init interrupt
-		sei();
 
-		//init mpu6050
-
-		mpu6050_init();
 		//_delay_ms(50);
-    	mpu6050_getRawData(&ax, &ay, &az, &gx, &gy, &gz);
-    	mpu6050_getConvData(&axg, &ayg, &azg, &gxds, &gyds, &gzds);
-    	getTemperature(&temp);
+    	//mpu6050_getRawData(&ax, &ay, &az, &gx, &gy, &gz);
+    	//mpu6050_getConvData(&axg, &ayg, &azg, &gxds, &gyds, &gzds);
+		//getConvData(&axg, &ayg, &azg, &gxds, &gyds, &gzds);
+    	//getTemperature(&temp);
+		getAttitudeData(&ax, &ay, &az, &Roll, &Pitch);
 
-    	put_float(axg);
-    	put_float(ayg);
-    	put_float(azg);
-    	put_float(temp);
-    	put_string("\n");
+		put_float(Roll);
+		put_float(Pitch);
+		put_string("\n");
 
-
-    	if (axg < 0){
-    		PORTB |=  _BV(PORTB7);
-    	}else{
-    		PORTB &= ~_BV(PORTB7);
-    	}
-    	/*if(axg < 0.1) PORTB &= 0x00;
-
-    	if(axg >= 0.1 && axg < 0.4){
-    		PORTB &= 0x00;
-    		PORTB |= 0x10;
-    	}
-
-    	if(axg >= 0.4 && axg < 0.6){
-    		PORTB &= 0x00;
-    		PORTB |= 0x30;
-    	}
-    	if(axg >= 0.6 && axg < 0.9){
-    		PORTB &= 0x00;
-			PORTB |= 0x70;
-    	}
-    	if(axg >= 0.9){
-    		PORTB &= 0x00;
-			PORTB |= 0xF0;
-		}*/
-
-		vTaskDelayUntil( &xLastWakeTime, ( 10 ) );
+    	// delay 10ms
+    	vTaskDelay(10/portTICK_PERIOD_MS);
 
     }
 }

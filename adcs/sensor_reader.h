@@ -17,7 +17,7 @@ void getConvData(double *acelX, double *acelY, double *acelZ, double *rateX, dou
 void getTemperature(double *temp);
 
 //get attitude data
-void getAttitudeData(double *anglX, double *anglY, double *anglZ);
+void getAttitudeData(double *anglX, double *anglY, double *anglZ, double *Roll, double *Pitch);
 
 // read bytes from MPU6050 register
 int8_t readBytesFromMPU6050(uint8_t regAddr, uint8_t length, uint8_t *data);
