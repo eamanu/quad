@@ -4,14 +4,17 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../adcs/complementaryFilter.c \
 ../adcs/mpu6050.c \
 ../adcs/sensor_reader.c 
 
 OBJS += \
+./adcs/complementaryFilter.o \
 ./adcs/mpu6050.o \
 ./adcs/sensor_reader.o 
 
 C_DEPS += \
+./adcs/complementaryFilter.d \
 ./adcs/mpu6050.d \
 ./adcs/sensor_reader.d 
 

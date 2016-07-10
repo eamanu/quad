@@ -10,7 +10,9 @@ RM := rm -rf
 -include sources.mk
 -include uart/subdir.mk
 -include i2c/subdir.mk
+-include comm/subdir.mk
 -include adcs/subdir.mk
+-include SPI/subdir.mk
 -include subdir.mk
 -include objects.mk
 
